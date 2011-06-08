@@ -42,7 +42,7 @@ while connected:
                 s.send("PONG %s\r\n" % line[1])
             elif(line[1]=="NOTICE"):
                 pass
-            elif(line[1]=='PRIVMSG' and line[2] == 'btc-bot'):
+            elif(line[1]=='PRIVMSG' and line[2] == NICK):
                 cmd("JOIN", "#bhngaming")
             elif(line[1]=='PRIVMSG' and line[2].lower() == '#bhngaming'):
                 try:
@@ -60,10 +60,11 @@ while connected:
                                 resp = "{USD}{input} to BTC: {BTC}{value}".format(USD=USD, BTC=BTC, input=line[5], value=c)
                                 cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="tousd"):
-                                c = float(line[5])
+                                c = float(line[5].replace(BTC,''))
+                                cinput = c
                                 ticker = mtgox.getticker()['ticker']
                                 c = c * ticker['last']
-                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=line[5], value=c)
+                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=cinput, value=c)
                                 cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="address"):
                                 ADDRESS = line[5]
