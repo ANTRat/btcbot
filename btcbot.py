@@ -54,32 +54,32 @@ while connected:
                             ticker = "Sell: {ticker[sell]}  Buy: {ticker[buy]}  High: {ticker[high]}  Low: {ticker[low]}  Last: {ticker[last]}  Vol: {ticker[vol]}".format(**ticker)
                             cmd("PRIVMSG", "#bhngaming", ":"+ticker)
                         elif(len(line) == 6 and line[4].lower()=="tobtc"):
-                                cmd_input = line[5].replace(USD, '').replace(',', '')
-                                usd_value = float(cmd_input)
-                                ticker = mtgox.getticker()['ticker']
-                                inusd = usd_value / ticker['last']
-                                resp = "{USD}{input} to BTC: {BTC}{value}".format(USD=USD, BTC=BTC, input=usd_value, value=inusd)
-                                cmd("PRIVMSG", "#bhngaming", ":"+resp)
+                            cmd_input = line[5].replace(USD, '').replace(',', '')
+                            usd_value = float(cmd_input)
+                            ticker = mtgox.getticker()['ticker']
+                            inusd = usd_value / ticker['last']
+                            resp = "{USD}{input} to BTC: {BTC}{value}".format(USD=USD, BTC=BTC, input=usd_value, value=inusd)
+                            cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="tousd"):
-                                cmd_input = line[5].replace(BTC, '').replace(',', '')
-                                btc_value = float(cmd_input)
-                                ticker = mtgox.getticker()['ticker']
-                                inusd = btc_value * ticker['last']
-                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=btc_value, value=inusd)
-                                cmd("PRIVMSG", "#bhngaming", ":"+resp)
+                            cmd_input = line[5].replace(BTC, '').replace(',', '')
+                            btc_value = float(cmd_input)
+                            ticker = mtgox.getticker()['ticker']
+                            inusd = btc_value * ticker['last']
+                            resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=btc_value, value=inusd)
+                            cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="address"):
-                                ADDRESS = line[5]
-                                unpaid = mtgox.getbalance_unpaid(ADDRESS)[-1][1]
-                                paid = mtgox.getbalance_paid(ADDRESS)[-1][1]
-                                cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Paid: {BTC}{paid}  Unpaid: {BTC}{unpaid}  Total: {BTC}{total}".format(BTC=BTC, address=ADDRESS, paid=paid, unpaid=unpaid, total=(paid+unpaid)))
+                            ADDRESS = line[5]
+                            unpaid = mtgox.getbalance_unpaid(ADDRESS)[-1][1]
+                            paid = mtgox.getbalance_paid(ADDRESS)[-1][1]
+                            cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Paid: {BTC}{paid}  Unpaid: {BTC}{unpaid}  Total: {BTC}{total}".format(BTC=BTC, address=ADDRESS, paid=paid, unpaid=unpaid, total=(paid+unpaid)))
                         elif(len(line) == 6 and line[4].lower()=="paid"):
-                                ADDRESS = line[5]
-                                paid = mtgox.getbalance_paid(ADDRESS)[-1][1]
-                                cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Paid: {BTC}{paid}".format(BTC=BTC, address=ADDRESS, paid=paid))
+                            ADDRESS = line[5]
+                            paid = mtgox.getbalance_paid(ADDRESS)[-1][1]
+                            cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Paid: {BTC}{paid}".format(BTC=BTC, address=ADDRESS, paid=paid))
                         elif(len(line) == 6 and line[4].lower()=="unpaid"):
-                                ADDRESS = line[5]
-                                unpaid = mtgox.getbalance_unpaid(ADDRESS)[-1][1]
-                                cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Unpaid: {BTC}{unpaid}".format(BTC=BTC, address=ADDRESS, unpaid=unpaid))
+                            ADDRESS = line[5]
+                            unpaid = mtgox.getbalance_unpaid(ADDRESS)[-1][1]
+                            cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Unpaid: {BTC}{unpaid}".format(BTC=BTC, address=ADDRESS, unpaid=unpaid))
                         else:
                             cmd("PRIVMSG", "#bhngaming", ":Available commands: TICKER TOBTC TOUSD ADDRESS PAID UNPAID")
                 except ValueError, e:
