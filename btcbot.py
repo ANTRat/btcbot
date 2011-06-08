@@ -46,7 +46,7 @@ while connected:
             elif(line[1]=='433'):
                  NICK+='`'
                  cmd("NICK", NICK)
-            elif(line[1]=='PRIVMSG' and line[2] == NICK):
+            elif(line[1]=='001'):
                 cmd("JOIN", CHAN)
             elif(line[1]=='PRIVMSG' and line[2].lower() == CHAN):
                 try:
