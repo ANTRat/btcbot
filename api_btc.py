@@ -6,8 +6,8 @@ import locale
 import re
 
 TICKER = "https://mtgox.com/code/data/ticker.php"
-UNPAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_unpaid_us_%s.json"
-PAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/already_paid_us_%s.json"
+UNPAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_unpaid_eu_%s.json"
+PAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/already_paid_eu_%s.json"
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
