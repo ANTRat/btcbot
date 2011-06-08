@@ -54,16 +54,18 @@ while connected:
                             ticker = "Sell: {ticker[sell]}  Buy: {ticker[buy]}  High: {ticker[high]}  Low: {ticker[low]}  Last: {ticker[last]}  Vol: {ticker[vol]}".format(**ticker)
                             cmd("PRIVMSG", "#bhngaming", ":"+ticker)
                         elif(len(line) == 6 and line[4].lower()=="tobtc"):
-                                c = float(line[5])
+                                cmd_input = line[5].replace(USD, '').replace(',', '')
+                                usd_value = float(cmd_input)
                                 ticker = mtgox.getticker()['ticker']
-                                c = c / ticker['last']
-                                resp = "{USD}{input} to BTC: {BTC}{value}".format(USD=USD, BTC=BTC, input=line[5], value=c)
+                                inusd = usd_value / ticker['last']
+                                resp = "{USD}{input} to BTC: {BTC}{value}".format(USD=USD, BTC=BTC, input=usd_value, value=inusd)
                                 cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="tousd"):
-                                c = float(line[5].replace(BTC,''))
+                                cmd_input = line[5].replace(BTC, '').replace(',', '')
+                                btc_value = float(cmd_input)
                                 ticker = mtgox.getticker()['ticker']
-                                inusd = c * ticker['last']
-                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=c, value=inusd)
+                                inusd = btc_value * ticker['last']
+                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=btc_value, value=inusd)
                                 cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="address"):
                                 ADDRESS = line[5]
