@@ -6,9 +6,9 @@ import locale
 import re
 
 TICKER = "https://mtgox.com/code/data/ticker.php"
-UNPAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_unpaid_eu_%s.json"
-PAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/already_paid_eu_%s.json"
-CURRENTBLOCK_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_current_block_eu_%s.json"
+UNPAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_unpaid_%s_%s.json"
+PAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/already_paid_%s_%s.json"
+CURRENTBLOCK_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_current_block_%s_%s.json"
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
@@ -38,23 +38,33 @@ def getticker():
     f.close()
     return resp
 
-def getbalance_unpaid(address):
-    f = urllib2.urlopen(UNPAID_ELIGIUS_ST % address)
-    resp = json.load(f)
-    f.close()
-    return resp
+def getbalance_unpaid(address, pool=None):
+    if pool == None:
+        return getbalance_unpaid(address, 'eu') + getbalance_unpaid(address, 'us')
+    else:
+        f = urllib2.urlopen(UNPAID_ELIGIUS_ST % (pool, address))
+        resp = json.load(f)[-1][1]
+        f.close()
+        return resp
 
-def getbalance_paid(address):
-    f = urllib2.urlopen(PAID_ELIGIUS_ST % address)
-    resp = json.load(f)
-    f.close()
-    return resp
 
-def getbalance_currentblock(address):
-    f = urllib2.urlopen(CURRENTBLOCK_ELIGIUS_ST % address)
-    resp = json.load(f)
-    f.close()
-    return resp
+def getbalance_paid(address, pool=None):
+    if pool == None:
+        return getbalance_paid(address, 'eu') + getbalance_paid(address, 'us')
+    else:
+        f = urllib2.urlopen(PAID_ELIGIUS_ST % (pool, address))
+        resp = json.load(f)[-1][1]
+        f.close()
+        return resp
+
+def getbalance_currentblock(address, pool=None):
+    if pool == None:
+        return getbalance_currentblock(address, 'eu') + getbalance_currentblock(address, 'us')
+    else:
+        f = urllib2.urlopen(CURRENTBLOCK_ELIGIUS_ST % (pool, address))
+        resp = json.load(f)[-1][1]
+        f.close()
+        return resp
 
 def cur_to_locale(value, international=False):
     return locale.currency(value, True, True, international=international)
@@ -104,11 +114,13 @@ if __name__ == "__main__":
     print cur_parse(value)
     value = "$1,234,567,890"
     print cur_parse(value)
-#    try:
-#        ADDRESS = '1DFLXKsPTk4MRmVaAowraL9xFGewyUZGon'
-#        unpaid = getbalance_unpaid(ADDRESS)
-#        print repr(unpaid[-1][1])
-#        paid = getbalance_paid(ADDRESS)
-#        print repr(paid[-1][1])
-#    except urllib2.HTTPError, e:
-#        print repr(e), str(e)
+    try:
+        ADDRESS = '1DFLXKsPTk4MRmVaAowraL9xFGewyUZGon'
+        unpaid_both = getbalance_unpaid(ADDRESS)
+        print unpaid_both
+        assert unpaid_both == getbalance_unpaid(ADDRESS,'us')  + getbalance_unpaid(ADDRESS,'eu')
+        paid_both = getbalance_paid(ADDRESS)
+        print paid_both
+        assert paid_both == getbalance_paid(ADDRESS,'us')  + getbalance_paid(ADDRESS,'eu')
+    except urllib2.HTTPError, e:
+        print repr(e), str(e)

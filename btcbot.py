@@ -12,6 +12,7 @@ USD="$"
 BTC='\xe0\xb8\xbf'
 HOST="irc.gamesurge.net"
 PORT=6667
+PASS=None
 NICK="btc-bot"
 IDENT="btc-bot"
 REALNAME="Bitcoin Bot"
@@ -21,6 +22,8 @@ connected = True
 
 s=socket.socket( )
 s.connect((HOST, PORT))
+if PASS:
+    s.send("PASS %s\r\n" % PASS)
 s.send("NICK %s\r\n" % NICK)
 s.send("USER %s %s bla :%s\r\n" % (IDENT, HOST, REALNAME))
 
@@ -71,19 +74,28 @@ while connected:
                             inusd = btc_value * ticker['last']
                             resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=btc_value, value=inusd)
                             cmd("PRIVMSG", CHAN, ":"+resp)
-                        elif(len(line) == 6 and line[4].lower()=="address"):
+                        elif((len(line) == 6 or len(line) == 7) and line[4].lower()=="address"):
                             ADDRESS = line[5]
-                            unpaid = api_btc.getbalance_unpaid(ADDRESS)[-1][1]
-                            paid = api_btc.getbalance_paid(ADDRESS)[-1][1]
-                            block = api_btc.getbalance_currentblock(ADDRESS)[-1][1]
+                            POOL = None
+                            if len(line) == 7:
+                                POOL = line[6]
+                            unpaid = api_btc.getbalance_unpaid(ADDRESS, POOL)
+                            paid = api_btc.getbalance_paid(ADDRESS, POOL)
+                            block = api_btc.getbalance_currentblock(ADDRESS, POOL)
                             cmd("PRIVMSG", CHAN, ":Address: {address}  Paid: {BTC}{paid}  Unpaid: {BTC}{unpaid}  CurrentBlock: {BTC}{block}  Total: {BTC}{total}".format(BTC=BTC, address=ADDRESS, paid=paid, unpaid=unpaid, block=block, total=(paid+unpaid+block)))
-                        elif(len(line) == 6 and line[4].lower()=="paid"):
+                        elif((len(line) == 6 or len(line) == 7) and line[4].lower()=="paid"):
                             ADDRESS = line[5]
-                            paid = api_btc.getbalance_paid(ADDRESS)[-1][1]
+                            POOL = None
+                            if len(line) == 7:
+                                POOL = line[6]
+                            paid = api_btc.getbalance_paid(ADDRESS, POOL)
                             cmd("PRIVMSG", CHAN, ":Address: {address}  Paid: {BTC}{paid}".format(BTC=BTC, address=ADDRESS, paid=paid))
-                        elif(len(line) == 6 and line[4].lower()=="unpaid"):
+                        elif((len(line) == 6 or len(line) == 7) and line[4].lower()=="unpaid"):
                             ADDRESS = line[5]
-                            unpaid = api_btc.getbalance_unpaid(ADDRESS)[-1][1]
+                            POOL = None
+                            if len(line) == 7:
+                                POOL = line[6]
+                            unpaid = api_btc.getbalance_unpaid(ADDRESS, POOL)
                             cmd("PRIVMSG", CHAN, ":Address: {address}  Unpaid: {BTC}{unpaid}".format(BTC=BTC, address=ADDRESS, unpaid=unpaid))
                         elif(len(line) == 6 and line[4].lower()=="convert"):
                             input_value = line[5]
