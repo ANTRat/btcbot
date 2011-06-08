@@ -61,10 +61,9 @@ while connected:
                                 cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="tousd"):
                                 c = float(line[5].replace(BTC,''))
-                                cinput = c
                                 ticker = mtgox.getticker()['ticker']
-                                c = c * ticker['last']
-                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=cinput, value=c)
+                                inusd = c * ticker['last']
+                                resp = "{BTC}{input} to USD: {USD}{value}".format(USD=USD, BTC=BTC, input=c, value=inusd)
                                 cmd("PRIVMSG", "#bhngaming", ":"+resp)
                         elif(len(line) == 6 and line[4].lower()=="address"):
                                 ADDRESS = line[5]
