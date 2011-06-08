@@ -75,7 +75,8 @@ while connected:
                             ADDRESS = line[5]
                             unpaid = api_btc.getbalance_unpaid(ADDRESS)[-1][1]
                             paid = api_btc.getbalance_paid(ADDRESS)[-1][1]
-                            cmd("PRIVMSG", CHAN, ":Address: {address}  Paid: {BTC}{paid}  Unpaid: {BTC}{unpaid}  Total: {BTC}{total}".format(BTC=BTC, address=ADDRESS, paid=paid, unpaid=unpaid, total=(paid+unpaid)))
+                            block = api_btc.getbalance_currentblock(ADDRESS)[-1][1]
+                            cmd("PRIVMSG", CHAN, ":Address: {address}  Paid: {BTC}{paid}  Unpaid: {BTC}{unpaid}  CurrentBlock: {BTC}{block}  Total: {BTC}{total}".format(BTC=BTC, address=ADDRESS, paid=paid, unpaid=unpaid, block=block, total=(paid+unpaid+block)))
                         elif(len(line) == 6 and line[4].lower()=="paid"):
                             ADDRESS = line[5]
                             paid = api_btc.getbalance_paid(ADDRESS)[-1][1]

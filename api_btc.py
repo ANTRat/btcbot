@@ -8,6 +8,7 @@ import re
 TICKER = "https://mtgox.com/code/data/ticker.php"
 UNPAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_unpaid_eu_%s.json"
 PAID_ELIGIUS_ST = "http://eligius.st/~artefact2/json/already_paid_eu_%s.json"
+CURRENTBLOCK_ELIGIUS_ST = "http://eligius.st/~artefact2/json/balance_current_block_eu_%s.json"
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
@@ -45,6 +46,12 @@ def getbalance_unpaid(address):
 
 def getbalance_paid(address):
     f = urllib2.urlopen(PAID_ELIGIUS_ST % address)
+    resp = json.load(f)
+    f.close()
+    return resp
+
+def getbalance_currentblock(address):
+    f = urllib2.urlopen(CURRENTBLOCK_ELIGIUS_ST % address)
     resp = json.load(f)
     f.close()
     return resp
