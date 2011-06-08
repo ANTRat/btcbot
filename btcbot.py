@@ -80,8 +80,24 @@ while connected:
                             ADDRESS = line[5]
                             unpaid = api_btc.getbalance_unpaid(ADDRESS)[-1][1]
                             cmd("PRIVMSG", "#bhngaming", ":Address: {address}  Unpaid: {BTC}{unpaid}".format(BTC=BTC, address=ADDRESS, unpaid=unpaid))
+                        elif(len(line) == 6 and line[4].lower()=="convert"):
+                            input_value = line[5]
+                            input_locale, value = api_btc.cur_parse(input_value)
+                            if(input_locale == 'en_US'):
+                                ticker = api_btc.getticker()['ticker']
+                                resp = api_btc.cur_to_btc(value / ticker['last'])
+                            elif(input_locale == 'BTC'):
+                                ticker = api_btc.getticker()['ticker']
+                                resp = api_btc.cur_to_locale(value * ticker['last'])
+                            else:
+                                raise ValueError("Unknown input locale: %s" % input_locale)
+
+                            cmd("PRIVMSG", "#bhngaming", ":{input_value} is valued at {dest_value}".format(
+                                input_value = input_value,
+                                dest_value = resp
+                            ))
                         else:
-                            cmd("PRIVMSG", "#bhngaming", ":Available commands: TICKER TOBTC TOUSD ADDRESS PAID UNPAID")
+                            cmd("PRIVMSG", "#bhngaming", ":Available commands: TICKER CONVERT ADDRESS TOBTC TOUSD PAID UNPAID")
                 except ValueError, e:
                     cmd("PRIVMSG", "#bhngaming", ":Error: %s" % str(e))
                     traceback.print_exc(file=sys.stderr)
