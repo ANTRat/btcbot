@@ -43,10 +43,10 @@ while connected:
                 s.send("PONG %s\r\n" % line[1])
             elif(line[1]=="NOTICE"):
                 pass
-            elif(line[1]=='433'):
+            elif(line[1]=='433' and line[3] == NICK):
                  NICK+='`'
                  cmd("NICK", NICK)
-            elif(line[1]=='001'):
+            elif(line[1]=='001' and line[2] == NICK):
                 cmd("JOIN", CHAN)
             elif(line[1]=='PRIVMSG' and line[2].lower() == CHAN):
                 try:
