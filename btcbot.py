@@ -3,7 +3,7 @@
 import sys
 import socket
 import string
-import mtgox
+import api_btc
 import urllib2
 import sys
 import traceback
